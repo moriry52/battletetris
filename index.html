@@ -1,0 +1,2144 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<title>Battle Tetris</title>
+	<meta name="viewport" content="width=400,user-scalable=no">
+
+
+	<style type="text/css">
+		<!--
+		body {
+			font-family: arial;
+			overflow: hidden;
+		}
+
+		#Whole {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			background: linear-gradient(blue, #000040);
+			z-index: 0;
+		}
+
+		#GameLayer {
+			position: absolute;
+			width: 200%;
+			height: 100%;
+			z-index: 0;
+			overflow: hidden;
+		}
+
+		#bulletLayer {
+			position: absolute;
+			z-index: 1;
+		}
+
+		#Operation {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 140px;
+			left: 0px;
+			font-size: 8px;
+			color: white;
+			visibility: visible;
+			z-index: 0
+		}
+
+		#CharLayer {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			color: white;
+			text-align: center;
+			text-shadow: 5px 5px 5px #101010;
+			z-index: 1
+		}
+
+		#Hitarea {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			display: block;
+			z-index: 2
+		}
+
+		#Controller {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 400px;
+			height: 124px;
+			display: block;
+			z-index: 3;
+		}
+
+		#PauseLayer {
+			position: absolute;
+			left: 15px;
+			top: 78px;
+			width: 50px;
+			height: 20px;
+			box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.5);
+			z-index: 4
+		}
+
+		#FadeLayer {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: black;
+			opacity: 0.5;
+			display: none;
+			z-index: 5
+		}
+
+		#FadeLayer2 {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: black;
+			opacity: 0.5;
+			display: none;
+			z-index: 8
+		}
+
+		#DialogLayer {
+			position: absolute;
+			z-index: 7
+		}
+
+
+		.Field {
+			position: absolute;
+			border: 1px solid white;
+			border-collapse: collapse;
+			background: linear-gradient(black, navy);
+			box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4)
+		}
+
+		.Dialog {
+			position: absolute;
+			background-color: #FFFFFF;
+			border-radius: 10px;
+			text-align: center;
+			border: 1px solid #aaa;
+			box-shadow: 2px 2px 4px #888;
+			display: none;
+		}
+
+		.Btn {
+			display: inline-block;
+			padding: 0.2em 0.2em;
+			background: mediumblue;
+			color: white;
+			box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+			font-weight: bold;
+			font-size: 14px;
+			text-align: center;
+		}
+
+		.grey_btn {
+			display: inline-block;
+			padding: 0.2em 0.2em;
+			background: grey;
+			color: white;
+			box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+			font-weight: bold;
+			font-size: 14px;
+			text-align: center;
+		}
+
+		.pressed {
+			transform: translateY(2px);
+			box-shadow: 0px 0px 0px !important;
+		}
+
+		.Btn:active {
+			transform: translateY(2px);
+			box-shadow: 0px 0px 0px;
+		}
+
+		.titlems {
+			position: relative;
+			left: 15%;
+			width: 200px;
+			font-size: 40px;
+			font-weight: bold;
+			background: navy;
+			color: white;
+			box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+		}
+
+		.titlems::before {
+			position: absolute;
+			content: '';
+			top: 100%;
+			left: 0;
+			border: none;
+			border-bottom: solid 15px transparent;
+			border-right: solid 20px rgb(149, 158, 155);
+		}
+
+		.block0 {
+			background-color: transparent;
+		}
+
+		.block1 {
+			/* skyblue*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAk1BMVEUAAAAJ8PAz8/Ik8vIL1NQs8vI68/Eb8fEU8fEOzc1K9PBD9PIT8O0L3d26+/R79+4N2Nek+fMw8+0b7utE9OwM4eEQxsY88+aC9+5r9u0e8e1a9ety9vBU9e1j9ezD+/eX+fKI+Ow78+wU4uAm5N8Z1dQRycnQ/Pi0+vSr+vOe+fKR+PA28uYs7eYUu7t19u4o19bq7W0UAAAAAXRSTlMAQObYZgAAAQJJREFUKM9tztl2gjAQgOFJWIIJFYSwi+zu2r7/0zUTsKcRfy44zJcFAN67r2gUlWWM+T5A02wvu7lr297yICiKQ8XlCKdTs106ny/X9tblgSL5A7suV+v2+HzjYp7JLLs/ygm6qq65EFxI2ffqGt9Xl/iEbCBX878fYGQJJeDcpdRVD6WWZ4rAMeaYskfBUMh/KfAwZwZmyEFocZyVVFow4xpyhFq4zgIWMfZwQXGKwNZizXnEOE24CzDmmXukFqZaCcXxDKZkkRaPeZ/E0xGjo5KY6fGbpHCPYh8zxglJUniMwzAkSfKlW96hbT9hnCb7vU2apk+AMAzVR2iHqpcogl9KtxZVSS2sTwAAAABJRU5ErkJggg==");
+			background-size: 100% 100%;
+		}
+
+
+		.block2 {
+			/* yellow*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAulBMVEUAAADw6wn07zbz7zLu6Qry7iTz7y7x7Rvz7ivx7BfMyA7y7R/x7BPx7A/W0QrSzgr08ET08EHy7ijg3Ar7+rP39Xb39G/08Dv5+J7i3Q/18k708D7v6hP282P08Uju6Q/Tzw3RzAr8+8HOyQ3X0wv595f59oj49Xz29Gv28lrDwBLHwxDp5Av6+az6+KH18lTX0xjQzBLd2Av8/M/6+KX595Hj3yzX0yft6Cbk4CLi3SG8uRS5tRTm4Q3MKdFcAAAAAXRSTlMAQObYZgAAAR1JREFUKM9l0ulSgzAUhuFDQrYCClgaBalI6b7Xfbv/2/KkqdDYZ4Y/3zsQhgFgqAkh1FyUciaEUuoeAdR1/3lza41fJlk2K8ttHutXqJ/q/sl6vRlPJtNsUM7z+A3G0ywbWDOzJJpQLlmwh2meD5OjQtNUhWF05O8hG8YJsWgqvD/+yJTiFDhT/4puS+i1RjDDh1FLBlF3Tw/KtnA8ptODeVzgaEimnLKN9SlIFjolTwiOBgsip+A7S5kaTHhOKQoqU2YEyi1ac7sHInILIXiAIS4Lw9FQnlsoZWZFZ7f45htwHuAeoqgLtkiBuxuMJcgUf4gHw2+tVqufBbx/3Fk3rcOhaaov+NxVVXXdeUSj3nLxDbBrmqtzFVYs8Av9Rx3z6xlxMQAAAABJRU5ErkJggg==");
+			background-size: 100% 100%;
+		}
+
+		.block3 {
+			/* green*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAApVBMVEUAAAAi8AlM8zYu8RY98ice0wg08R1G8jFV9EAi4QtC8ikkyRBa9EMj1A2u+Z+D920p8Q9L8y2G93AjzQ4h3Qq++7GO93lq9U4x7xfB+7Ng9EVa9Dwn7hDJ/L+p+ZeU+H159mJR8zEs1Bcq4hMezwm6+quy+qOh+Y2a+IaL93Vz9Vtx9VZq9VNj9Es71ycmuxQmwxPZ/NDQ/MdB4yxB7CY64yEr7xISoZ4zAAAAAXRSTlMAQObYZgAAARFJREFUKM9lz9lygkAQheFmdgcIEBFRccUtJi5Z3//RcmRIqMGfKaD6oy8gOrOuTChVlpyX5Q/RfD7aP7UtjsciSZLV63g6+6SP9/lkMhmNcHa7/eJwWAJBF1osi+K5CR+f8PFsts6sVRtajsdRFBmDY5hVnKec8yAIhlScI8Nc2qrA1cjL9F+s4J5Ef6J7ktxBM42ESjvZ0gqiXVjpCulkjGjmmejJmzFaw6z1ZQhhok1V3k4Esbi8FSTJQFy+hBCBFOKpL/h1zB8lpjVzCyjwdiBu/CgsayVNe5JlJXcS9MViWFWVNx4MBjf6+q7rGm85jsSzuUsZX+myiWO8yK6tlGEYXok2eR7fc5g3Ngxv9At53BYY1zpb4gAAAABJRU5ErkJggg==");
+			background-size: 100% 100%;
+		}
+
+		.block4 {
+			/* red*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAn1BMVEUAAADwCQnzNDPyKynUCwvyIiHxFBLxHBvzPDv0RULJDw/dCwvxGRThDQzzQzzyMSrWERD5pqDNDg77urPzOTX3gnf3eG35n5f4iH33enL2bmT1WE/0TkruEA/8xL/7trH2dG30VFD6sqz6qqT4j4b2Z2T2ZVz1YVb1U0v0S0XjKSfXKCe6FBTiFBPEEhL81dD8y8f5l5D5loztLSfWHBukOhSVAAAAAXRSTlMAQObYZgAAARBJREFUKM9tjtdygzAQRVcSIESTkoje3OJup/7/t2Ul8DDgnFl4uGfuagEaX1OfUq0pwnjkRhaAruu3LwN5/rVL07TaH+pjcobPj+7N0vebzTb/3hVpVR3q5AJ5UZRllq0y/Kp9fUoMUroKinrdCEuSaMmjyMMhhASQHk/CR7Rv3sfMYE3ZCMxwULCILA2i0bjeZBSscBe1yJl5hXchzCJrOJkb8zSjbKxMZm2N4dk8xHDzdJsQD+FyMuvgMuYO2MrUwZtHwb1ZBw0bcs7bhaGYGmxlIjDGpDhLQyWGFvJkXO9/IxlW2radxXEc3+HnfLvFSBiHSIx/x4y6wuVXOcpZEAT3K4BSKnQcHEs4mgD+AISNFT76YnVTAAAAAElFTkSuQmCC");
+			background-size: 100% 100%;
+		}
+
+		.block5 {
+			/* blue*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAwFBMVEUAAAAJDvA0OPIdIvEtMvIlKvINEvAKDtQWG/E5PfETGO8JDt8OEsylpvRGSfIZHusNEdO6u/QpLvJOUe5CRvJ5fO4dIuw+QvF2ee85Pe0zN+1JTew9QegKDs4PE8i2t/UhJvCBhO5UV+1kZ+xBRexZXesuMusNEuHDxPdKTfFpbO0VGeANEdgSFsQUF7uqrPOXmvGPkfB+ge5ydO5uceyHius2OuYtMeQnK94WGtTLzPjV1veeoPKJi+0oK9ccINWl4QCVAAAAAXRSTlMAQObYZgAAATFJREFUKM9lkdeWgjAURS/FAFGBoaqIUsXK2MvU//+ruQm4FnH2Sng4m8N5AMANx4bBjixPZCdIgiDYWJYFsFzO34ctX/tD6vvndV66xQ0+PpdvDfM5vrM/XFL/nJfRDwy/06M/GuEZndZ55kZRMb1OFskDLmXmmozIK8aLwOJQSgaQZivPaJAXCiFEYleSBnB0zdCQOWpPlxq48V0TRWto15xWnvw0CumaNTcqr4gmN0PMVaQzg8ygxBmV4yRU6nYyz8DQwYsfE4zrYaXHeDU447RCJ8JOFGIjUXqKolBJ6BQGDjCwIprpuBH6fzNBozOo9Gp4TnVKBDNrDEVEQ3Zwxb9FCeakYwipdnC7bzbVtqr6XTTbruH+a3NirSWOtXgwq2uAx9bWtpj0teeDmR38AfK6Hgd+NXZbAAAAAElFTkSuQmCC");
+			background-size: 100% 100%;
+		}
+
+		.block6 {
+			/* orange*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAnFBMVEUAAADwVQnzdTXxXhbybiz0fkDUTArxZiLxaibxYhzeTwnNTQ7wWQ7ycizKTRD6zrL3qHf5vpn0gkX3o3L3oW7zejvTUhPGSw/hUgv5w6H5wZ/1kVX1i070hkniVhDaUAz81r/2nWvzejPuWA/83sz6yqv4sob4rX32m2X2lmHtaybjYyG7SxT70bb5t431lFzjaSzXYSfWWRvvWxI905tSAAAAAXRSTlMAQObYZgAAAQ5JREFUKM9d0YmOgjAUheFbWkqrFMsiMKij4Drq7O//bnMEOsH+ISHpx6UlEG2WgcsIpRF/RLTbLV5Q2qRNk6Yna4titVpn4RcdDrv3xdDx2KQfp7MtLqBvSq21eZHnedG2l088HIZdZ666pPN6tQlRli2XneGP4pgzNieL9WBM6Zi5nPTnM4qzieRZ6I4tVDyVFntgsf+a6EneABABUZpNBSNCQIQR2MabEWPRVBLMOMKZvbdhTSiEEW8GgmUVQfyZaEh7EgS9cA9YAsEGGhfne18iPubPGCd7X4QeIGaeGMF/8a/ip4ma1Qldb6+ormdDw13K8k63n7KUUm7lf3Mpq6S6E5XbrYOZw6qq6A/QwxSzxOYKzwAAAABJRU5ErkJggg==");
+			background-size: 100% 100%;
+		}
+
+		.block7 {
+			/* purple*/
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAn1BMVEUAAACMCfB8CtShM/KcLPKZJfKVHPGQEvGjOvGTGex6Ds2pR/LBeu6EC+HfuvTVpPO+dO6pRu6uU+2yWOueMeukPOZ5EMmnQvLEge6gNe6XIe7Iie2rTOyJFOB3EMa6a+2iOe22Y+ymQuuhNuaTKeCDFdfny/jjw/fctfTYq/PSnvLOlvGIDuWCCt2ADteJIdZzFLvr1ffKjfGaLOd/E9IqA315AAAAAXRSTlMAQObYZgAAARFJREFUKM9lj4mSgjAQBScJKwkBRcALAZHD29U9/v/b9pGFKoNdUxTVTQYg0rKUcoMRYpM4aapArhTR8Tg9z3ou1++174e7fRxVDR2+DtOe0+l8uW63iHE8f9AMdyD0w9A8nGXVoq6TtKVtHEda6zkoyyRVHa7LmEfrSK/kPyJRbADFz/RKSNHhfExGBb4v7msJsWwoE6vstJSO8dYylD2WwQrHXsaWFGkJabCKhyKGMCpai87C4zXWNvwNbAe+zDozlw4k5q1UKLBgXBYSz/dhVAQCtDsqS1psoA1vZxKljEawz9SJchVTlg3YLSjop8nz/B7cWMADM+bC+ZOax2/LLTzuecviSdR+co65W7Eo6A/QiBYj2Jmi2QAAAABJRU5ErkJggg==");
+			background-size: 100% 100%;
+		}
+
+		.block8 {
+			background: #272727;
+		}
+
+		.block9 {
+			background: white;
+		}
+
+		.block10 {
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAZlBMVEUAAAB7e3uNjY19fX3///+cnJyjo6OVlZWHh4enp6egoKCDg4OysrKvr6+AgICrq6uKioq5ubmZmZno6Ojh4eG2trbe3t7Z2dnOzs7ExMSRkZHS0tL19fXu7u7BwcG9vb2pqanv7+9g+i1nAAAAAXRSTlMAQObYZgAAAPpJREFUKM9djumygyAMRkNSdkFw194u9/1fskE7U/EM+fMdsgDk1h4opVyHGyKaZAzAreKvH4b5vqw5SDYX9+iHeVlHDbf/vh+mid/En595HEOrnNw8PNZnbnZCsBJTMkz0JKB/jcEeOIlEJEox0OemtWpHaiN+wJCbr3BS+7OZx1BS5VwZdjZ3NhyW0rVZmlZJJ5l6DcHa8E073ebFCXgFy2HHxcMqk4PiOYWraVrXfYU5G2LDHRtqRPTiDATLC3YS1aa1h0horkaxMQUvavNWmEpsfN1C8HZsPFMbiqAk8ncfiU6GiI3UJpLg+EIEnaI4qIdFgN9J9ZoPVIoPU/uzDKcAAAAASUVORK5CYII=");
+			background-size: 100% 100%;
+		}
+
+
+		.arrow {
+			color: white;
+			display: inline-block;
+			width: 90px;
+			height: 60px;
+			background: gray;
+			border-radius: 5px;
+			box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2), -2px -2px 2px rgba(0, 0, 0, 0.4) inset, 2px 2px 2px rgba(255, 255, 255, 0.4) inset;
+			position: relative;
+		}
+
+		.Left::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 22px;
+			top: 10px;
+			border-top: 19px solid transparent;
+			border-right: 38px solid white;
+			border-bottom: 19px solid transparent;
+			position: absolute;
+		}
+
+		.Right::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 28px;
+			top: 10px;
+			border-top: 19px solid transparent;
+			border-left: 38px solid white;
+			border-bottom: 19px solid transparent;
+			position: absolute;
+		}
+
+		.Down::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 25px;
+			top: 15px;
+			border-top: 30px solid white;
+			border-left: 20px solid transparent;
+			border-right: 20px solid transparent;
+			position: absolute;
+		}
+
+		.Up::before {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 25px;
+			top: 13px;
+			border-top: 17px solid white;
+			border-left: 20px solid transparent;
+			border-right: 20px solid transparent;
+			position: absolute;
+		}
+
+		.Up::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 25px;
+			top: 30px;
+			border-top: 17px solid white;
+			border-left: 20px solid transparent;
+			border-right: 20px solid transparent;
+			position: absolute;
+		}
+
+		.Circle::before {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 27px;
+			top: 7px;
+			border-bottom: 14px solid white;
+			border-left: 14px solid transparent;
+			border-right: 14px solid transparent;
+			transform: rotate(320deg);
+			position: absolute;
+		}
+
+		.Circle::after {
+			content: "";
+			display: inline-block;
+			top: 14px;
+			left: 24px;
+			border: 0 solid transparent;
+			border-bottom: 12px solid white;
+			border-radius: 0 0 0 100px;
+			width: 30px;
+			height: 30px;
+			transform: rotate(230deg);
+			position: absolute;
+		}
+
+		.Lrotate::before {
+			content: "";
+			display: inline-block;
+			top: 5px;
+			left: 22px;
+			border-bottom: 9px solid white;
+			border-top: 9px solid white;
+			border-left: 9px solid white;
+			border-right: 9px solid white;
+			border-radius: 26px 26px 26px 26px;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+		}
+
+		.Lrotate::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 34px;
+			top: 33px;
+			border-bottom: 10px solid grey;
+			border-left: 10px solid white;
+			border-right: 2px solid grey;
+			border-top: 10px solid grey;
+			transform: rotate(27deg);
+			position: absolute;
+		}
+
+		.Rrotate::before {
+			content: "";
+			display: inline-block;
+			top: 5px;
+			left: 22px;
+			border-bottom: 9px solid white;
+			border-top: 9px solid white;
+			border-left: 9px solid white;
+			border-right: 9px solid white;
+			border-radius: 26px 26px 26px 26px;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+		}
+
+		.Rrotate::after {
+			content: "";
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			left: 43px;
+			top: 34px;
+			border-bottom: 10px solid grey;
+			border-right: 10px solid white;
+			border-left: 2px solid grey;
+			border-top: 10px solid grey;
+			transform: rotate(333deg);
+			position: absolute;
+		}
+
+		.arrow:active {
+			transform: translateY(2px);
+		}
+
+		#Left_key {
+			position: absolute;
+			display: inline-block;
+			left: 0;
+			bottom: 64px;
+		}
+
+		#Right_key {
+			position: absolute;
+			display: inline-block;
+			left: 92px;
+			bottom: 64px;
+		}
+
+		#Harddrop_key {
+			position: absolute;
+			display: inline-block;
+			right: 92px;
+			bottom: 64px;
+		}
+
+		#Hold_key {
+			position: absolute;
+			display: inline-block;
+			right: 0px;
+			bottom: 64px;
+		}
+
+		#Softdrop_key {
+			position: absolute;
+			display: inline-block;
+			left: 46px;
+			bottom: 2px;
+		}
+
+		#Left-R_key {
+			position: absolute;
+			display: inline-block;
+			right: 92px;
+			bottom: 2px;
+		}
+
+		#Right-R_key {
+			position: absolute;
+			display: inline-block;
+			right: 0px;
+			bottom: 2px;
+		}
+
+		.drum {
+			position: absolute;
+			display: none;
+			border: solid 0.5px;
+			border-color: black rgba(200, 200, 200, 0.2);
+			background: linear-gradient(to bottom, rgba(200, 200, 200, 0.5),
+					rgba(255, 255, 255, 0) 10%,
+					rgba(255, 255, 255, 0) 90%,
+					rgba(200, 200, 200, 0.5));
+			width: 60px;
+			height: 100px;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			text-align: center;
+			z-index: 10;
+		}
+
+		.chara_outer_frame {
+			position: absolute;
+			display: block;
+			padding: 1px;
+			border: solid black 0.5px;
+			font-size: 25px;
+			font-weight: bold;
+		}
+
+		.chara_inner_frame {
+			display: inline-block;
+			border: solid blue 0.5px;
+			width: 30px;
+			height: 30px;
+		}
+
+		.gauge1 {
+			position: absolute;
+			display: block;
+			border: solid rgba(255, 0, 0, 0.5) 0.5px;
+			width: 12px;
+			height: 12px;
+			top: 0px;
+		}
+
+		.gauge2 {
+			position: absolute;
+			display: block;
+			border: solid rgba(0, 255, 0, 0.5) 0.5px;
+			width: 12px;
+			height: 12px;
+			top: 0px;
+		}
+
+		.bullet {
+			position: absolute;
+			width: 20px;
+			/*幅*/
+			height: 20px;
+			/*高さ*/
+			border-radius: 50%;
+			/*角丸*/
+			background: red;
+			display: none;
+		}
+		-->
+	</style>
+
+
+</head>
+
+<body onselectstart="return false" oncontextmenu="return false">
+
+	<!-- ～～～～～～～～～～　ドラムロールとそのダイアログ　～～～～～～～～～～-->
+	<div id="drumroll" style="position:absolute;top:190px"></div>
+	<div class="Dialog" id="drumroll_dialog" style="position:absolute;display:none;top:175px;z-index:2;">
+		<div id="drum_bar" style="position:absolute;border:solid 1px;border-color:blue transparent;left:9px;"></div>
+		<div class="Btn" id="roll_cancel" style="position:absolute;left:20px;bottom:15px;width:45px">Cancel</div>
+		<div class="Btn" id="roll_confirm" style="position:absolute;right:20px;bottom:15px;width:45px">OK</div>
+	</div>
+
+	<!-- ～～～～～～～～～～　ヘルプとそのダイアログ　～～～～～～～～～～-->
+	<div class="Dialog" id="help_dialog"
+		style="position:absolute;display:none;top:175px;left:75px;top:155px;width:250px;height:200px;z-index:2;">
+		<div id="help_message" style="position:absolute;left:15px;top:10px;width:220px;text-align:left"></div>
+		<div class="Btn" id="help_confirm" style="position:absolute;right:20px;bottom:15px;width:45px">OK</div>
+	</div>
+
+	<!-- ～～～～～～～～～～　全体レイヤー　～～～～～～～～～～-->
+	<div id="Whole">
+		<div id="bulletLayer"></div>
+
+		<!-- ～～～～～～～～～～　ゲームレイヤー　～～～～～～～～～～-->
+		<div id="GameLayer">
+			<div id="Operation">
+			</div>
+		</div>
+		<div id="gauge" style="position:absolute;left:103px;display:none;">
+			<div class="gauge1" id="g0" style="left:0px"></div>
+			<div class="gauge1" id="g1" style="left:12px"></div>
+			<div class="gauge1" id="g2" style="left:24px"></div>
+			<div class="gauge1" id="g3" style="left:36px"></div>
+			<div class="gauge1" id="g4" style="left:48px"></div>
+			<div class="gauge1" id="g5" style="left:60px"></div>
+			<div class="gauge1" id="g6" style="left:72px"></div>
+			<div class="gauge1" id="g7" style="left:84px;border-right:white solid 0.5px;"></div>
+			<div class="gauge2" id="g8" style="left:96px;border-left:white solid 0.5px;"></div>
+			<div class="gauge2" id="g9" style="left:108px"></div>
+			<div class="gauge2" id="g10" style="left:120px"></div>
+			<div class="gauge2" id="g11" style="left:132px"></div>
+			<div class="gauge2" id="g12" style="left:144px"></div>
+			<div class="gauge2" id="g13" style="left:156px"></div>
+			<div class="gauge2" id="g14" style="left:168px"></div>
+			<div class="gauge2" id="g15" style="left:180px"></div>
+		</div>
+
+		<!-- ～～～～～～～～～～　タッチパネルレイヤー　～～～～～～～～～～-->
+		<div id="Hitarea"></div>
+
+		<!-- ～～～～～～～～～～　コントローラーレイヤー　～～～～～～～～～～-->
+		<div id="Controller">
+			<div id="Left_key" class="arrow Left"></div>
+			<div id="Right_key" class="arrow Right"></div>
+			<div id="Harddrop_key" class="arrow Up"></div>
+			<div id="Hold_key" class="arrow Circle"></div>
+			<div id="Softdrop_key" class="arrow Down"></div>
+			<div id="Left-R_key" class="arrow Lrotate"></div>
+			<div id="Right-R_key" class="arrow Rrotate"></div>
+		</div>
+
+		<!-- ～～～～～～～～～～　ポーズボタンレイヤー　～～～～～～～～～～-->
+		<div id="PauseLayer" class="Btn">Pause</div>
+
+		<!-- ～～～～～～～～～～　文字表示レイヤー　～～～～～～～～～～-->
+		<div id="CharLayer"></div>
+
+		<!-- ～～～～～～～～～～　フェイドレイヤー1　～～～～～～～～～～-->
+		<div id="FadeLayer">
+			<div style="position:absolute;display:block;left:150px;top:200px;color:white;font-size:20px">Wait...</div>
+		</div>
+
+		<!-- ～～～～～～～～～～　フェイドレイヤー2　～～～～～～～～～～-->
+		<div id="FadeLayer2"></div>
+
+		<!-- ～～～～～～～～～～　ダイアログレイヤー　～～～～～～～～～～-->
+		<div id="DialogLayer">
+
+			<!-- ～～～～～～～～～～　ニックネームダイアログ　～～～～～～～～～～-->
+			<div class="Dialog" id="name_dialog"
+				style="position:relative;display:none;left:50px;top:50px;width:300px;height:300px;z-index:1">
+				<br><br><br>
+				<font size="5px"><b>
+						<div id="end_message">チームの順位は...</div><br>
+					</b></font>
+				スコア:&nbsp;<b>
+					<div id="total_points" style="display:inline;"></div>
+				</b>&nbsp;点<br>
+				<div class="Btn" id="END" style="position:absolute;left:130px;top:250px">&nbsp;&nbsp;終了&nbsp;&nbsp;
+				</div>
+			</div>
+
+
+			<!-- ～～～～～～～～～～　タイトルダイアログ　～～～～～～～～～～-->
+			<div id="start" class="Dialog" style="left:50px;top:50px;width:300px;height:400px;">
+				<br><br>
+				<div class="titlems">TETRiS</div>
+				<div id="code_help" class="grey_btn" style="position:absolute;left:85px;top:143px;">&nbsp;?&nbsp;</div>
+				<div style="position:absolute;top:145px;left:115px">
+					対戦コード:
+				</div>
+				<div id="battle_code_input_num" class="chara_outer_frame" style="top:170px;left:35px;">
+					<div class="chara_inner_frame" id="battle_code0"></div>
+					<div class="chara_inner_frame" id="battle_code1"></div>
+					<div class="chara_inner_frame" id="battle_code2"></div>
+					<div class="chara_inner_frame" id="battle_code3"></div>
+					<div class="chara_inner_frame" id="battle_code4"></div>
+				</div>
+				<div class="Btn" id="battle_code_input" style="position:absolute;top:175px;left:235px;">
+					変更
+				</div>
+				<div style="position:absolute;top:220px;left:10px">他Playerと同じ数値を入力してください<br>(好きな数値を決めてください)</div>
+				<div class="Btn" id="user_wait" style="position:absolute;left:110px;top:345px;font-size:23px">
+					&nbsp;&nbsp;Start&nbsp;&nbsp;
+				</div>
+			</div>
+
+			<!-- ～～～～～～～～～～　ネームとチーム　～～～～～～～～～～-->
+			<div id="name_team"" class=" Dialog" style="left:50px;top:50px;width:300px;height:370px;">
+
+
+				<div id="player_help" class="grey_btn" style="position:absolute;left:70px;top:23px;">&nbsp;?&nbsp;</div>
+
+				<div style="position:absolute;top:25px;left:100px">
+					ニックネーム:
+				</div>
+				<div id="user_name_input_num" class="chara_outer_frame" style="top:55px;left:80px;">
+					<div class="chara_inner_frame" id="user_name0"></div>
+					<div class="chara_inner_frame" id="user_name1"></div>
+					<div class="chara_inner_frame" id="user_name2"></div>
+				</div>
+				<div class="Btn" id="user_name_input" style="position:absolute;top:55px;left:200px;">
+					変更
+				</div>
+				<div style="position:absolute;top:100px;left:10px">(他のPlayerと同一名でも対戦できます)</div>
+
+				<div id="team_help" class="grey_btn" style="position:absolute;left:100px;top:153px;">&nbsp;?&nbsp;</div>
+				<div style="position:absolute;top:155px;left:130px">
+					チーム:
+				</div>
+				<div id="team_number_input_num" class="chara_outer_frame" style="top:185px;left:110px;">
+					<div class="chara_inner_frame" id="team_number0"></div>
+				</div>
+				<div class="Btn" id="team_number_input" style="position:absolute;top:190px;left:160px;">
+					変更
+				</div>
+				<div style="position:absolute;top:230px;left:15px">チーム名が異なるPlayerに攻撃します</div>
+
+				<div class="Btn" id="enemy_cancel" style="position:absolute;left:20px;bottom:20px;font-size:23px">
+					&nbsp;&nbsp;Cancel&nbsp;&nbsp;
+				</div>
+
+				<div class="Btn" id="enemy_wait" style="position:absolute;right:20px;bottom:20px;font-size:23px">
+					&nbsp;&nbsp;OK&nbsp;&nbsp;
+				</div>
+			</div>
+
+			<!-- ～～～～～～～～～～　参加者待ちダイアログ　～～～～～～～～～～-->
+			<div class="Dialog" id="user_wait_dialog"
+				style="position:relative;display:none;left:50px;top:50px;width:300px;height:300px;font-size:25px;font-weight:bold;">
+				<div style="position:relative;top:20px;margin:auto;">
+					参加者：<br>
+					<div id="enemy_names" style="display:inline;font-size:20px;"></div>
+					<br>
+				</div>
+				<div class="Btn" id="decline" style="position:absolute;left:20px;top:240px;font-size:23px">
+					&nbsp;&nbsp;戻る&nbsp;&nbsp;
+				</div>
+				<div class="Btn" id="Game_start" style="position:absolute;right:20px;top:240px;font-size:23px">
+					&nbsp;&nbsp;スタート&nbsp;&nbsp;
+				</div>
+			</div>
+
+			<!-- ～～～～～～～～～～　スタート待ちのダイアログ　～～～～～～～～～～-->
+			<div class="Dialog" id="wait_dialog"
+				style="position:absolute;display:none;top:175px;left:125px;top:155px;width:150px;height:100px;z-index:2;">
+				<div id="help_message" style="position:absolute;left:15px;top:10px;text-align:center">
+					他の参加者待ち</div>
+				<div class="grey_btn" id="start_cancel" style="position:absolute;left:45px;bottom:15px;width:60px">
+					Cancel
+				</div>
+			</div>
+
+			<!-- ～～～～～～～～～～　ポーズダイアログ　～～～～～～～～～～-->
+			<div id="pause" class="Dialog" style="left:50px;top:60px;width:300px;height:350px">
+				<br>
+				<div style="font-size:35px;font-weight:bold;">Pause !!</div><br>
+				<div class="Btn" id="ControllerSwitch">&nbsp;コントローラー&nbsp;<br>&nbsp;&nbsp;on/off&nbsp;</div>
+				<br><br><br><br>
+				<div class="Btn" id="TouchSwitch">&nbsp;タッチ操作&nbsp;<br>&nbsp;&nbsp;on/off&nbsp;</div><br><br><br><br>
+				<div class="Btn" id="Pause_end">&nbsp;&nbsp;もどる&nbsp;&nbsp;</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+
+	<script>
+		var socket = io();
+
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		//～～～～～～～～～　タイトル画面のヘルプ表示　　～～～～～～～～～
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		display_help = {
+			display: function (message) {
+				document.getElementById("FadeLayer2").style.display = "block";
+				document.getElementById("help_dialog").addEventListener('touchstart', function (event) {
+					event.preventDefault();
+				}, { passive: false });
+				document.getElementById("help_message").innerHTML = message;
+				document.getElementById("help_dialog").style.display = "block";
+				let height = document.getElementById("help_message").clientHeight
+				document.getElementById("help_dialog").style.height = (height + 60) + "px";
+				document.getElementById("help_dialog").style.top = 230 - (height / 2 + 30) + "px"
+				document.getElementById("help_dialog").style.display = "block";
+			},
+			confirm: function () {
+				document.getElementById("FadeLayer2").style.display = "none";
+				document.getElementById("help_dialog").style.display = "none";
+			}
+		}
+
+		button_set("code_help", function () { display_help.display("同じ数値を入力したPlayerと対戦できます。初期値はランダムですが2回目から前回のコードが表示されます。(数値は何でもかまいません)") });
+		button_set("player_help", function () { display_help.display("他のPlayerの画面にこの名前が表示されます。(他のPlayerと同じ名前でも対戦できます)") });
+		button_set("team_help", function () { display_help.display("自分の攻撃は自分と異なるチーム名のPlayerに飛び、自分と同じチーム名のPlayerが攻撃すると敵から受けた攻撃が相殺されます。(全員同じチーム名の場合は全Player別チームとして扱います)") });
+		button_set("help_confirm", function () { display_help.confirm() });
+
+		button_set("start_cancel", function () {
+			Game_decline();
+		});
+
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		//～～～～～～～～～～　ドラムロールで文字入力　　～～～～～～～～～
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		drumroll = {
+			display: function (characters, length, width, height, initial_value, callback) {
+				this.scroll_size = height + 2
+				this.scroll_offset = this.scroll_size * 1.5;
+				this.characters = characters;
+				this.length = length;
+				document.getElementById("FadeLayer2").style.display = "block";
+				document.getElementById("drumroll_dialog").addEventListener('touchstart', function (event) {
+					event.preventDefault();
+				}, { passive: false });
+
+				char_roll = "";
+				div_tag = '<div style="display:block;height:' + String(height + 1) + 'px">'
+				for (let i = 0; i < characters.length; i++) {
+					char_roll += div_tag + characters.substr(i, 1) + "</div>";
+				}
+				drums = "";
+				for (let i = 0; i < length; i++) {
+					drums += '<div id="roll' + String(i) + '" class="drum" style="display:block;left:' + String(i * width) + 'px;width:' + String(width) + 'px;height:' + String(this.scroll_size * 4) + 'px;font-size:' + String(height) + 'px"><b>'
+					drums += Array(4).join(div_tag + '</div>') + char_roll + Array(2).join(div_tag + '</div>')
+					drums += '<div style="height:' + String(this.scroll_size * 0.8) + 'px;"></div>' + "</b></div>"
+				}
+				document.getElementById("drumroll").style.left = String(200 - (width * length) / 2) + "px"
+				document.getElementById("drumroll").innerHTML = drums;
+				document.getElementById("drumroll").style.display = "block";
+				document.getElementById("drumroll_dialog").style.height = String(this.scroll_size * 4 + 80) + "px";
+				document.getElementById("drumroll_dialog").style.display = "block";
+				document.getElementById("drumroll_dialog").style.left = String(200 - (width * length) / 2 - 10) + "px"
+				document.getElementById("drumroll_dialog").style.width = String((width * length) + 20) + "px"
+				document.getElementById("drum_bar").style.width = String((width * length)) + "px"
+				document.getElementById("drum_bar").style.top = String(this.scroll_offset + 12) + "px"
+				document.getElementById("drum_bar").style.height = String(this.scroll_size) + "px"
+
+				for (let i = 0; i < length; i++) {
+					let rolltouch_F
+					document.getElementById("roll" + String(i)).addEventListener('scroll', function (event) {
+						let timeoutID;
+						let top = document.getElementById("roll" + String(i)).scrollTop
+						if (top < drumroll.scroll_offset) {
+							document.getElementById("roll" + String(i)).scrollTop = drumroll.scroll_offset;
+						}
+						clearTimeout(timeoutID)
+
+						adjust = function () {
+							if (rolltouch_F) {
+								timeoutID = setTimeout(adjust, 100);
+							} else {
+								let a = document.getElementById("roll" + String(i)).scrollTop;
+								let b = Math.floor(((a - drumroll.scroll_offset) + (drumroll.scroll_size - 1) / 2) / (drumroll.scroll_size - 1)) * (drumroll.scroll_size - 1) + drumroll.scroll_offset;
+								document.getElementById("roll" + String(i)).scrollTop = b;
+							}
+						}
+						timeoutID = setTimeout(adjust, 100);
+					});
+					document.getElementById("roll" + String(i)).addEventListener('touchend', function (event) {
+						rolltouch_F = false;
+					}, { passive: false });
+					document.getElementById("roll" + String(i)).addEventListener('touchstart', function (event) {
+						rolltouch_F = true;
+					}, { passive: false });
+				}
+				char = (initial_value + Array(10).join(characters.slice(0, 1))).slice(0, length)
+				for (let i = 0; i < length; i++) {
+					document.getElementById("roll" + String(i)).scrollTop = characters.indexOf(char.substr(i, 1)) * (this.scroll_size - 1) + this.scroll_offset
+				}
+
+				this.callback = callback
+			},
+
+			confirm: function () {
+				let score_name = [];
+				for (let i = 0; i < this.length; i++) {
+					let a = document.getElementById("roll" + String(i)).scrollTop;
+					let b = parseInt((a - this.scroll_offset + (this.scroll_size - 1) / 2) / (this.scroll_size - 1))
+					score_name[i] = this.characters.substr(b, 1);
+				}
+				document.getElementById("FadeLayer2").style.display = "none";
+				document.getElementById("drumroll").style.display = "none";
+				document.getElementById("drumroll_dialog").style.display = "none";
+				this.callback(score_name)
+
+			},
+			cancel: function () {
+				document.getElementById("FadeLayer2").style.display = "none";
+				document.getElementById("drumroll").style.display = "none";
+				document.getElementById("drumroll_dialog").style.display = "none";
+				this.callback(null);
+			}
+
+		}
+
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		//～～～～～～～～～～　弾丸のクラス　～～～～～～～～～
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		var bullet = function (name) {
+			this.name = name;
+			bullet_ms = "<div class='bullet' id='" + name + "'></div>"
+			document.getElementById("bulletLayer").innerHTML += bullet_ms;
+		}
+
+		bullet.prototype.move = function (start_x, start_y, end_x, end_y, size, color, duration) {
+			document.getElementById(this.name).style.backgroundColor = color;
+			document.getElementById(this.name).style.width = size + "px";
+			document.getElementById(this.name).style.height = size + "px";
+			document.getElementById(this.name).style.left = start_x + "px";
+			document.getElementById(this.name).style.top = start_y + "px";
+			document.getElementById(this.name).style.display = "block"
+			let u = 1;
+			for (let i = 0; i < Math.floor(duration / 30); i++) {
+				setTimeout(function () {
+					document.getElementById(this.name).style.left = (end_x - start_x) / Math.floor(duration / 30) * u + start_x + "px";
+					document.getElementById(this.name).style.top = (end_y - start_y) / Math.floor(duration / 30) * u + start_y + "px";
+					u++;
+				}.bind(this), (i + 1) * 30)
+			}
+			setTimeout(function () {
+				document.getElementById(this.name).style.display = "none";
+			}.bind(this), 30 * (Math.floor(duration / 30) + 2));
+
+		}
+
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+		//～～～～～～～～～～　フィールドのクラス　～～～～～～～～～
+		//～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
+
+		var Field = function (area_name, field_position_x, field_position_y, field_size_x, field_size_y, block_size) {
+			this.area_name = area_name;
+			this.field_position_x = field_position_x;
+			this.field_position_y = field_position_y;
+			this.field_size_x = field_size_x;
+			this.field_size_y = field_size_y;
+			this.block_size = block_size;
+
+			this.field_data = new Array(field_size_y);
+
+			//～～～～～～～～～～　インスタンス生成と同時にフィールド作成　　～～～～～～～～～
+			let FIELD = '<table cellspacing="0" cellpadding="0" class="Field" id="' + area_name + '">';
+			for (let j = 0; j < field_size_y; j++) {
+				FIELD += "<tr>";
+				for (let i = 0; i < field_size_x; i++) {
+					FIELD += '<td id="' + area_name + String(i + j * field_size_x) + '" width="' + String(block_size) + '" height="' + String(block_size) + '"></td>';
+				}
+				FIELD += '</tr>';
+			}
+			FIELD += '</table>';
+			document.getElementById("GameLayer").innerHTML += FIELD;
+			document.getElementById(area_name).style.left = String(field_position_x) + "px";
+			document.getElementById(area_name).style.top = String(field_position_y) + "px";
+			for (let i = 0; i < this.field_size_y; i++) {
+				this.field_data[i] = new Array(field_size_x).fill(0);
+			}
+
+		}
+
+
+		Field.prototype.Draw_blocks = function (X, Y, Block_vector, Block_number) {
+			let X1 = X;
+			let Y1 = Y;
+			for (let i = 0; i < 4; i++) {
+				X1 += Block_vector[i][0];
+				Y1 += Block_vector[i][1];
+				this.Draw_single_block(X1, Y1, Block_number);
+			}
+		}
+
+		Field.prototype.Draw_single_block = function (X, Y, Block_number) {
+			if (Y >= 0) {
+				document.getElementById(this.area_name + String(X + this.field_size_x * Y)).className = "block" + String(Block_number);
+			}
+		}
+
+		Field.prototype.Refresh_field = function () {
+			for (let i = 0; i < this.field_size_y; i++) {
+				for (let j = 0; j < this.field_size_x; j++) {
+					this.Draw_single_block(j, i, this.field_data[i][j]);
+				}
+			}
+		}
+
+		Field.prototype.Fill_field = function (block_number) {
+			for (let i = 0; i < this.field_size_y; i++) {
+				for (let j = 0; j < this.field_size_x; j++) {
+					this.Draw_single_block(j, i, block_number);
+				}
+			}
+		}
+
+		Field.prototype.Collision_detect = function (X, Y, block_vector) {
+			let judge = false;
+			let X1 = X;
+			let Y1 = Y;
+			for (let i = 0; i < 4; i++) {
+				X1 += block_vector[i][0];
+				Y1 += block_vector[i][1];
+				if (Y1 >= 0) {
+					if (X1 < 0 || X1 > (this.field_size_x - 1) || Y1 > (this.field_size_y - 1)) {
+						judge = true;
+					} else if (this.field_data[Y1][X1] > 0) {
+						judge = true;
+					}
+				}
+			}
+			return judge;
+		}
+
+		Field.prototype.Set_block = function (X, Y, block_vector, block_number) {
+			let X1 = X;
+			let Y1 = Y;
+			for (let i = 0; i < 4; i++) {
+				X1 += block_vector[i][0];
+				Y1 += block_vector[i][1];
+				if (Y1 >= 0) { this.field_data[Y1][X1] = block_number; }
+			}
+		}
+
+		Field.prototype.Filled_detect = function () {
+			let filled_lines = new Array(this.field_size_y);
+			for (let i = 0; i < this.field_size_y; i++) {
+				if (this.field_data[i].every(value => value > 0)) {
+					filled_lines[i] = 1;
+				} else {
+					filled_lines[i] = 0;
+				}
+			}
+			return filled_lines;
+		}
+
+		Field.prototype.Delete_lines = function (lines) {
+			for (let i = 0; i < lines.length; i++) {
+				if (lines[i] == 1) {
+					this.field_data.splice(i, 1)
+					this.field_data.unshift(new Array(this.field_size_x).fill(0));
+				}
+			}
+		}
+
+		Field.prototype.Effect = function (effect_time, effect_n, effect_lines) {
+			let filled_number = [0, 0, 0, 0];
+			let count = 0;
+			for (let i = 0; i < effect_lines.length; i++) {
+				if (effect_lines[i] == 1) {
+					filled_number[count++] = i;
+				}
+			}
+
+			for (let i = 0; i < effect_n; i++) {
+				setTimeout(function () { this.Effect1(filled_number, count) }.bind(this), effect_time * i * 2);
+				setTimeout(function () { this.Effect2(filled_number, count) }.bind(this), effect_time * (i * 2 + 1));
+			}
+		}
+
+		Field.prototype.Effect1 = function (lines, n) {
+
+			for (let i = 0; i < n; i++) {
+				for (let j = 0; j < this.field_size_x; j++) {
+					this.Draw_single_block(j, lines[i], 0);
+				}
+			}
+		}
+
+		Field.prototype.Effect2 = function (lines, n) {
+			for (let i = 0; i < n; i++) {
+				for (let j = 0; j < this.field_size_x; j++) {
+					this.Draw_single_block(j, lines[i], this.field_data[lines[i]][j]);
+				}
+			}
+		}
+
+
+
+		var Tetrimino = function () {
+			this.block_shape = [[[1, 1], [-1, 0], [2, 0], [1, 0]],   //Iブロック
+			[[1, 0], [1, 0], [0, 1], [-1, 0]],   //Oブロック
+			[[1, 1], [-1, 0], [1, -1], [1, 0]],  //Sブロック
+			[[1, 1], [1, 0], [-1, -1], [-1, 0]],   //Zブロック
+			[[1, 1], [-1, 0], [0, -1], [2, 1]],  //Lブロック
+			[[1, 1], [-1, 0], [2, 0], [0, -1]],  //Jブロック
+			[[1, 1], [0, -1], [-1, 1], [2, 0]]]; //Tブロック
+			this.XV = [[1, 0], [0, -1], [-1, 0], [0, 1]];
+			this.YV = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+		}
+
+		Tetrimino.prototype.Rotation = function (Block_number, R) {
+			if (Block_number != 1) {
+				let Rotated_vector = [[0, 0], [0, 0], [0, 0], [0, 0]];
+				Rotated_vector[0] = this.block_shape[Block_number][0];
+				for (let i = 1; i < 4; i++) {
+					Rotated_vector[i][0] = this.block_shape[Block_number][i][0] * this.XV[R][0] + this.block_shape[Block_number][i][1] * this.YV[R][0];
+					Rotated_vector[i][1] = this.block_shape[Block_number][i][0] * this.XV[R][1] + this.block_shape[Block_number][i][1] * this.YV[R][1];
+				}
+				return Rotated_vector;
+			} else {
+				return this.block_shape[1];
+			}
+		}
+
+		var Put_char = function (name, position_x, position_y, size, character) {
+			this.name = name;
+			this.position_x = position_x;
+			this.position_y = position_y;
+			this.size = size;
+			this.character = character;
+
+			let message = '<div style="position:absolute" id="' + name + '">' + character + '</div>';
+
+			document.getElementById("CharLayer").innerHTML += message;
+			document.getElementById(name).style.left = String(position_x) + "px";
+			document.getElementById(name).style.top = String(position_y) + "px";
+			document.getElementById(name).style.fontSize = String(size) + "px";
+			document.getElementById(name).style.display = "block";
+		}
+
+		Put_char.prototype.Change_char = function (position_x, position_y, size, character) {
+			document.getElementById(this.name).innerHTML = character;
+			document.getElementById(this.name).style.left = String(position_x) + "px";
+			document.getElementById(this.name).style.top = String(position_y) + "px";
+			document.getElementById(this.name).style.fontSize = String(size) + "px";
+			document.getElementById(this.name).style.display = "block";
+		}
+
+
+		var Game = function () {
+			this.position_x = 3;
+			this.position_y = 0;
+			this.ghost_y = 0;
+			this.block_rotation = 0;
+			this.block_number = new Array(6);
+			this.block_vector = new Array(6);
+			this.hold_number = 0;
+			this.hold_vector = [];
+
+			this.speed = 800;
+
+			this.turn_n = 7;
+			this.block_turn = [0, 1, 2, 3, 4, 5, 6];
+
+			this.hold_i = true;	//ホールドしたことないときにtrue
+			this.hold_F = true;	//ホールド可能なときにtrue
+			this.pause_F = false;
+			this.BTB_F = false;
+			this.combo_F = false;
+			this.effect_F = false;
+			this.hard_drop_F = false;
+			this.Tspin_F = false;
+			this.collision_F = false;
+			this.previous_attack = 0;
+
+			this.effect_time = 50;
+			this.effect_n = 4;
+
+			this.game_loop_value = [];
+			this.speed_value = 0;
+
+			this.points = [0, 150, 300, 500, 800];
+			this.co = 0;
+
+			this.gameover_speed = 0.5;
+
+			Math.random.seed = (function me(s) {
+				// Xorshift128 (init seed with Xorshift32)
+				s ^= s << 13; s ^= 2 >>> 17; s ^= s << 5;
+				let x = 123456789 ^ s;
+				s ^= s << 13; s ^= 2 >>> 17; s ^= s << 5;
+				let y = 362436069 ^ s;
+				s ^= s << 13; s ^= 2 >>> 17; s ^= s << 5;
+				let z = 521288629 ^ s;
+				s ^= s << 13; s ^= 2 >>> 17; s ^= s << 5;
+				let w = 88675123 ^ s;
+				let t;
+				Math.random = function () {
+					t = x ^ (x << 11);
+					x = y; y = z; z = w;
+					// >>>0 means 'cast to uint32'
+					w = ((w ^ (w >>> 19)) ^ (t ^ (t >>> 8))) >>> 0;
+					return w / 0x100000000;
+				};
+				Math.random.seed = me;
+				return me;
+			})(0);
+
+			let seed = 0;
+			for (i in users) {
+				seed += parseInt(i.slice(3))
+			}
+			Math.random.seed(seed);
+
+			this.srs = [[[1, 0], [2, 0], [-1, 0], [-2, 0]],
+			[[0, 0]],
+			[[1, 0], [1, 1], [-1, 0], [-1, 1], [0, 2], [-1, 2], [1, 2]],
+			[[1, 0], [1, 1], [-1, 0], [-1, 1], [0, 2], [-1, 2], [1, 2]],
+			[[1, 0], [1, 1], [-1, 0], [-1, 1], [0, 2], [-1, 2], [1, 2]],
+			[[1, 0], [1, 1], [-1, 0], [-1, 1], [0, 2], [-1, 2], [1, 2]],
+			[[1, 0], [1, 1], [-1, 0], [-1, 1], [0, 2], [-1, 2], [1, 2]]];
+
+			this.Hold_field = new Field("Hold", 15, 15, 5, 5, 10);
+			this.Game_field = new Field("Game", 92, 13, 10, 20, 21);
+			this.Next_field0 = new Field("Next0", 310, 15, 5, 5, 10);
+			this.Next_field1 = new Field("Next1", 355, 68, 5, 4, 8);
+			this.Next_field2 = new Field("Next2", 310, 94, 5, 4, 8);
+			this.Next_field3 = new Field("Next3", 355, 119, 5, 4, 8);
+			this.Next_field4 = new Field("Next4", 310, 145, 5, 4, 8);
+
+			this.tetrimino = new Tetrimino();
+			for (let i = 1; i < 6; i++) {
+				this.block_number[i] = this.Next_block();
+				this.block_vector[i] = this.tetrimino.Rotation(this.block_number[i], 0);
+			}
+
+			this.New_block();
+
+			this.hold_message = new Put_char("hold", 20, 0, 12, "Hold");
+			this.next_message = new Put_char("next", 315, 0, 12, "Next");
+			this.score_message = new Put_char("score", 315, 187, 15, "Score");
+			this.points_message = new Put_char("points", 315, 205, 12, "0");
+			this.effect_message = new Put_char("effect", 0, 0, 12, "");
+
+		}
+
+
+		Game.prototype.attack_gauge = function (attack_balance) {
+			if (this.previous_attack > attack_balance) {
+				let u = 0;
+				let pre = this.previous_attack
+				for (let i = 0; i < this.previous_attack - attack_balance + 1; i++) {
+					setTimeout(function () { this.display_gauge(pre + u); u -= 1; }.bind(this), 50 * i)
+				}
+			} else if (this.previous_attack < attack_balance) {
+				let u = 0;
+				let pre = this.previous_attack
+				for (let i = 0; i < attack_balance - this.previous_attack + 1; i++) {
+					setTimeout(function () { this.display_gauge(pre + u); u += 1; }.bind(this), 50 * i)
+				}
+			}
+			this.previous_attack = attack_balance;
+		}
+
+		Game.prototype.display_gauge = function (attack_balance) {
+			let range = [[-20, -7], [-20, -6], [-20, -5], [-20, -4], [-20, -3], [-20, -2], [-20, -1], [-20, 0], [0, 20], [1, 20], [2, 20], [3, 20], [4, 20], [5, 20], [6, 20], [7, 20]]
+			for (let i = 0; i < 16; i++) {
+				if (range[i][0] < attack_balance && attack_balance < range[i][1]) {
+					document.getElementById("g" + i).style.backgroundColor = (i < 8 ? "rgba(255,0,0,0.5)" : "rgba(0,255,0,0.5)");
+				} else {
+					document.getElementById("g" + i).style.backgroundColor = "transparent";
+				}
+			}
+		}
+
+
+		Game.prototype.Next_block = function () {
+			if (this.turn_n == 7) {
+				for (let i = 0; i < 100; i++) {
+					let BTN1 = parseInt(Math.random() * 7);
+					let BTN2 = parseInt(Math.random() * 7);
+					let BTN = this.block_turn[BTN1];
+					this.block_turn[BTN1] = this.block_turn[BTN2];
+					this.block_turn[BTN2] = BTN;
+				}
+				this.turn_n = 0;
+			}
+			this.turn_n += 1;
+			return this.block_turn[this.turn_n - 1];
+		}
+
+		//～～～～～～　ブロック着地処理　～～～～～～
+		Game.prototype.Collision = function () {
+			while (this.game_loop_value.length > 0) { clearTimeout(this.game_loop_value.pop()); }
+			this.collision_F = false;
+			//～～～～～～　T-spinフラグの判定　～～～～～～
+			if (this.Game_field.Collision_detect(this.position_x, this.position_y - 2, this.block_vector[0]) == false) { this.Tspin_F = false; }
+
+			//～～～～～～　ブロック格納とそろったラインの判定と数　～～～～～～
+			this.Game_field.Set_block(this.position_x, this.position_y - 1, this.block_vector[0], this.block_number[0] + 1);
+			this.Game_field.Refresh_field();
+			let filled_lines = this.Game_field.Filled_detect();
+			this.lines = 0; for (let i = 0; i < filled_lines.length; i++) { this.lines += filled_lines[i]; }
+			//～～～～～～　フラグの調整　～～～～～～
+			this.hold_F = true;
+			if (this.lines > 0 && this.lines < 4 && this.Tspin_F == false) { this.BTB_F = false; }
+
+			//～～～～～～　点数計算と表示　～～～～～～
+			let gotten_points = this.points[this.lines] * (this.combo_F ? 2 : 1) * (this.Tspin_F ? 4 : 1) * (this.BTB_F ? 2 : 1);
+			if (this.lines > 0) {
+				attack_power = ((this.lines > 1 ? this.lines - 1 : 0) + (this.Tspin_F ? 1 : 0)) * (this.Tspin_F ? 2 : 1) + (this.combo_F ? 1 : 0) + (this.BTB_F ? 2 : 0)
+			} else {
+				attack_power = 0;
+			}
+			attack_balance = ((attack_balance > 0 && attack_F) ? 0 : attack_balance)
+			attack_F = false;
+			attack_balance += attack_power;
+			this.attack_gauge(attack_balance);
+			total_points += gotten_points + this.co;
+			this.Print_points();
+			this.co = 0;
+			if (this.lines > 0) {	//そろったラインが1つ以上のとき
+				//～～～～～～　エフェクト　～～～～～～
+				this.effect_F = true;
+				this.Char_effect(this.lines, gotten_points);
+				while (this.game_loop_value.length > 0) { clearTimeout(this.game_loop_value.pop()); }
+				this.Game_field.Effect(this.effect_time, this.effect_n, filled_lines);
+				//～～～～～～　フラグの調整　～～～～～～
+				this.combo_F = true;
+				if (this.Tspin_F || this.lines == 4) { this.BTB_F = true }
+				//～～～～～～　フィールド・攻撃・ブロック・Nextブロック送信～～～～～～
+				call_emit (battle_code + my_username,{
+						field: this.Game_field.field_data, attack: attack_power,
+						message: this.attack_ms, block_number: 8, next: this.block_number[1]
+					})
+				//～～～～～～　ライン消し　～～～～～～
+				setTimeout(function () { this.Game_field.Delete_lines(filled_lines) }.bind(this), this.effect_time * (this.effect_n * 2));
+				setTimeout(function () { this.Collision_end() }.bind(this), this.effect_time * (this.effect_n * 2 + 1));
+			} else {	//そろったラインがないとき
+				this.combo_F = false;
+				this.Collision_end();
+			}
+
+		}
+
+		Game.prototype.enemy_attack = function () {
+			//～～～～～～　ダメージ数を計算　～～～～～～
+			if (attack_balance < 0) {
+				let lines = -attack_balance
+				attack_balance = 0;
+				setTimeout(function () {
+					this.increase_lines(lines)
+				}.bind(this), 500);
+			}
+		}
+
+		Game.prototype.increase_lines = function (lines) {
+			if (this.effect_F) {
+				setTimeout(function () {
+					this.increase_lines(lines)
+				}.bind(this), 100);
+			} else {
+				this.effect_F = true;
+				let attack_pattern = Array(this.Game_field.field_size_x).fill(10);
+				attack_pattern[Math.floor(Math.random() * this.Game_field.field_size_x)] = 0;
+				this.Game_field.field_data.splice(0, lines);
+				for (let i = 0; i < lines; i++) {
+					this.Game_field.field_data.push(attack_pattern.slice())
+				}
+				call_emit (battle_code + my_username,{
+						field: Game1.Game_field.field_data, attack: 0,
+						message: "", block_number: Game1.block_number[0], next: this.block_number[1]
+					})
+				this.Game_field.Refresh_field();
+				this.Draw_blocks_with_ghost();
+				this.attack_gauge(0);
+				this.effect_F = false;
+			}
+		}
+
+
+		Game.prototype.Collision_end = function () {
+			this.New_block();
+			if (this.Game_field.Collision_detect(this.position_x, this.position_y, this.block_vector[0])) { //ゲームオーバー
+			    this.Game_field.Draw_blocks (this.position_x, this.position_y, this.block_vector[0],this.block_number[0] + 1)
+				this.effect_F = true;
+				if (single_mode) {
+					let after_time = this.field_fall(user_fields[0]);
+					setTimeout(function () { this.Gameover() }.bind(this), after_time);
+				} else {
+					socket.emit("call", { [battle_code + my_username + "action"]: { action: "end", died: true } })
+				}
+			} else {
+				if (this.lines == 0) {
+					call_emit (battle_code + my_username,{
+							field: this.Game_field.field_data, attack: 0,
+							message: "", block_number: this.block_number[0], next: this.block_number[1]
+						})
+				}
+				this.enemy_attack();
+				this.effect_F = false;
+				this.Game_loop();
+
+			}
+		}
+
+		//～～～～～～　新しいブロック生成とNextブロックから落下ブロックへ移行　～～～～～～
+		Game.prototype.New_block = function () {
+			this.position_y = 0;
+			this.position_x = 3;
+			this.rotation = 0;
+			for (var i = 0; i < this.block_number.length - 1; i++) {
+				this.block_number[i] = this.block_number[i + 1];
+				this.block_vector[i] = this.block_vector[i + 1];
+			}
+			this.block_number[i] = this.Next_block();
+			this.block_vector[i] = this.tetrimino.Rotation(this.block_number[i], 0);
+			this.Next_field0.Refresh_field();
+			this.Next_field0.Draw_blocks(1, 1, this.block_vector[1], this.block_number[1] + 1);
+			this.Next_field1.Refresh_field();
+			this.Next_field1.Draw_blocks(1, 1, this.block_vector[2], this.block_number[2] + 1);
+			this.Next_field2.Refresh_field();
+			this.Next_field2.Draw_blocks(1, 1, this.block_vector[3], this.block_number[3] + 1);
+			this.Next_field3.Refresh_field();
+			this.Next_field3.Draw_blocks(1, 1, this.block_vector[4], this.block_number[4] + 1);
+			this.Next_field4.Refresh_field();
+			this.Next_field4.Draw_blocks(1, 1, this.block_vector[5], this.block_number[5] + 1);
+		}
+
+		//～～～～～～～～～～　点数エフェクト表示　～～～～～～～～～
+
+		Game.prototype.Char_effect = function (lines, points) {
+			this.effect_ms = (this.Tspin_F ? "T-spin<br>" : "");
+			this.effect_ms += ["Single", "Double", "Triple", "Tetris"][lines - 1];
+			this.effect_ms += (this.combo_F ? "<br>Combo" : "");
+			this.effect_ms += (this.BTB_F ? "<br>Back to back<br>" : "<br>");
+			this.effect_ms += String(points) + "<br>";
+			this.attack_ms = (attack_power > 0 ? ("<b>" + String(attack_power) + " Attack(s)</b>") : "")
+			this.effect_ms += "<b>" + this.attack_ms
+			let u = 0;
+			let X = this.Game_field.field_position_x + (this.position_x + 1) * this.Game_field.block_size;
+			let Y = this.Game_field.field_position_y + this.position_y * this.Game_field.block_size;
+			for (let i = 0; i < 7; i++) {
+				setTimeout(function () { this.effect_message.Change_char(X, Y - u, 10, this.effect_ms); u++ }.bind(this), 100 * i);
+			}
+			setTimeout(function () { this.effect_message.Change_char(0, 0, 10, "") }.bind(this), 700);
+			for (let i = 0; i < user_names.length - 1; i++) {
+				let bullet_color = (user_fields[i + 1].substr(0, 1) == "e" ? "red" : "green")
+				my_bullet[i].move(X, Y, fp[i].X + 20, fp[i].Y + 50, attack_power * 10, bullet_color, 150)
+			}
+		}
+
+
+
+		//～～～～～～　ライン消しエフェクト　～～～～～～
+
+		Game.prototype.Effect = function (effect_time, effect_n, effect_lines) {
+			while (this.game_loop_value.length > 0) { clearTimeout(this.game_loop_value.pop()); }
+			let filled_number = [0, 0, 0, 0];
+			let count = 0;
+			for (let i = 0; i < effect_lines.length; i++) {
+				if (effect_lines[i] == 1) {
+					filled_number[count++] = i;
+				}
+			}
+
+			for (let i = 0; i < effect_n; i++) {
+				setTimeout(function () { this.Effect1(filled_number, count) }.bind(this), effect_time * i * 2);
+				setTimeout(function () { this.Effect2(filled_number, count) }.bind(this), effect_time * (i * 2 + 1));
+			}
+		}
+
+		Game.prototype.Effect1 = function (lines, n) {
+
+			for (let i = 0; i < n; i++) {
+				for (let j = 0; j < this.Game_field.field_size_x; j++) {
+					this.Game_field.Draw_single_block(j, lines[i], 0);
+				}
+			}
+		}
+
+		Game.prototype.Effect2 = function (lines, n) {
+			for (let i = 0; i < n; i++) {
+				for (let j = 0; j < this.Game_field.field_size_x; j++) {
+					this.Game_field.Draw_single_block(j, lines[i], this.Game_field.field_data[lines[i]][j]);
+				}
+			}
+		}
+
+		//～～～～～～　点数表示　～～～～～～
+		Game.prototype.Print_points = function () {
+			this.points_message.Change_char(320, 210, 12, String(total_points));
+		}
+
+		//～～～～～～　ゴーストブロックとともに落下ブロック表示　～～～～～～
+		Game.prototype.Draw_blocks_with_ghost = function () {
+			this.ghost_y = this.position_y;
+			while (this.Game_field.Collision_detect(this.position_x, this.ghost_y + 1, this.block_vector[0]) == false) {
+				this.ghost_y++;
+			}
+			this.Game_field.Draw_blocks(this.position_x, this.ghost_y, this.block_vector[0], 8);
+			this.Game_field.Draw_blocks(this.position_x, this.position_y, this.block_vector[0], this.block_number[0] + 1);
+			call_emit (battle_code + my_username + "move", { block: [this.position_x, this.position_y, this.block_vector[0], this.block_number[0] + 1] })
+		}
+
+		//～～～～～～～～～～　ゲームオーバー　～～～～～～～～～
+		Game.prototype.Gameover = function () {
+			while (this.game_loop_value.length > 0) { clearTimeout(this.game_loop_value.pop()); }
+			document.onkeydown = "";
+			document.getElementById("total_points").innerHTML = String(total_points);
+			document.getElementById("FadeLayer").style.display = "block";
+			document.getElementById("name_dialog").style.display = "block"
+			let ranks = Object.keys(users).map(value => { return { team: users[value].team, rank: users[value].rank } })
+			ranks.sort(function (a, b) {
+				return a.rank - b.rank
+			})
+			let a = 0;
+			let team_rank = 0;
+			while (users[my_username].team != ranks[a].team) {
+				if (ranks[a].team != ranks[a + 1].team) {
+					team_rank += 1;
+				}
+				a += 1;
+			}
+
+			document.getElementById("end_message").innerHTML += "<br><br>" + (team_rank + 1) + " 位"
+		}
+
+		Game.prototype.field_fall = function (field_name) {
+			let X = parseInt(document.getElementById(field_name).style.left.slice(0, -2));
+			let Y = parseInt(document.getElementById(field_name).style.top.slice(0, -2));
+			let i = 0;
+			let u = 0;
+			while (i * i * this.gameover_speed < 800) {
+				setTimeout(function () {
+					document.getElementById(field_name).style.top = String(Y + u * u * this.gameover_speed) + "px";
+					document.getElementById(field_name).style.left = String(X + u) + "px";
+					u += 1;
+				}.bind(this), i * 20)
+				i += 1;
+			}
+			return i * 20;
+		}
+
+		//～～～～～～～～～～　メインループ　～～～～～～～～～
+		Game.prototype.Game_loop = function () {
+			if (this.pause_F == false) {
+				if (this.Game_field.Collision_detect(this.position_x, this.position_y, this.block_vector[0])) {
+					this.Collision();
+				} else {
+					this.Game_field.Refresh_field();
+					this.Draw_blocks_with_ghost();
+					this.game_loop_value.push(setTimeout(function () { this.position_y += 1; this.Game_loop() }.bind(this), this.speed));
+				}
+			}
+		}
+		//～～～～～～～～～～　アクション　～～～～～～～～～
+		Game.prototype.Hold_action = function () {
+			if (this.hold_F) {
+				this.hold_F = false;
+				while (this.game_loop_value.length > 0) { clearTimeout(this.game_loop_value.pop()); }
+				this.position_y = 0;
+				this.position_x = 3;
+				this.rotation = 0;
+				let temp_number = this.hold_number;
+				let temp_vector = this.hold_vector;
+				this.hold_number = this.block_number[0];
+				this.hold_vector = this.tetrimino.Rotation(this.block_number[0], 0);
+				this.Hold_field.Refresh_field();
+				this.Hold_field.Draw_blocks(1, 1, this.hold_vector, this.hold_number + 1);
+				if (this.hold_i) {
+					this.hold_i = false;
+					this.New_block();
+				} else {
+					this.block_number[0] = temp_number;
+					this.block_vector[0] = temp_vector;
+				}
+				call_emit (battle_code + my_username,{
+						field: this.Game_field.field_data, attack: 0,
+						message: "", block_number: this.block_number[0], next: this.block_number[1]
+					})
+				this.Game_loop();
+			}
+		}
+
+		Game.prototype.Move_action = function (X, Y, R) {
+			let rotated_r = (this.rotation + R) % 4
+			let rotated_v = this.tetrimino.Rotation(this.block_number[0], rotated_r)
+
+			//～～～～～　スーパーローテーション　～～～～～～
+			if (R > 0) {
+				let s = 0;
+				while (this.Game_field.Collision_detect(this.position_x + X, this.position_y + Y, rotated_v) == true && s < this.srs[this.block_number[0]].length) {
+					X = this.srs[this.block_number[0]][s][0];
+					Y = this.srs[this.block_number[0]][s][1];
+					s++;
+				}
+			}
+
+			if (this.Game_field.Collision_detect(this.position_x + X, this.position_y + Y, rotated_v) == false) {
+				this.position_x += X;
+				this.position_y += Y;
+				this.rotation = rotated_r;
+				this.block_vector[0] = rotated_v;
+				this.Game_field.Refresh_field();
+				this.Draw_blocks_with_ghost();
+				if (R > 0) { this.Tspin_F = true } else { this.Tspin_F = false }
+				if (Y == 1) { this.co += 5 }
+
+			}
+		}
+
+		Game.prototype.Hard_drop_action = function () {
+			let hard_x = this.position_x;
+			let hard_y = this.ghost_y;
+			let hard_vector = this.block_vector[0];
+			let hard_number = this.block_number[0];
+			this.co = 100;
+			this.position_y = this.ghost_y + 1;
+			this.Collision();
+			this.Game_field.Draw_blocks(hard_x, hard_y, hard_vector, 9);
+			setTimeout(function () { this.Game_field.Draw_blocks(hard_x, hard_y, hard_vector, hard_number + 1) }.bind(this), 100);
+
+		}
+
+
+
+		//～～～～～～～～～～　ゲームオブジェクト生成　～～～～～～～～～
+
+		var access_count = 0;
+
+		var total_points = 0;
+		var game_name = "battle_tetris"
+		var my_username = "";
+		var ene_username = "";
+		var users = {};
+		var user_num = 6;
+		var enemy_start = false;
+		var my_start = false;
+		var effect_ms = "";
+		var attack_power = 0;
+		var attack_balance = 0;
+		var random_seed
+		var single_mode = false;
+		var game_start_F = false;
+		var joining_F = false;
+		var attack_F = false;
+
+		var fp = [
+			{ X: 310, Y: 280, FX: 10, FY: 20, size: 8 },
+			{ X: 3, Y: 280, FX: 10, FY: 20, size: 8 },
+			{ X: 3, Y: 115, FX: 10, FY: 20, size: 8 },
+			{ X: 345, Y: 335, FX: 10, FY: 20, size: 8 }
+		]
+
+		var battle_code = localStorage.getItem(game_name + "battle_code");
+		if (battle_code == null) {
+			battle_code = ("00000" + Math.floor(Math.random() * 1000)).slice(-5)
+		}
+		insert_chara("battle_code", battle_code)
+
+		var user_name = localStorage.getItem(game_name + "user_name");
+		if (user_name == null) {
+			user_name = "AAA"
+		}
+		insert_chara("user_name", user_name)
+
+		var team_number = localStorage.getItem(game_name + "team_number");
+		if (team_number == null || ["A", "B", "C", "D"].indexOf(team_number) == -1) {
+			team_number = "A";
+		}
+		insert_chara("team_number", team_number)
+
+		document.getElementById("FadeLayer").style.display = "block";
+		document.getElementById("start").style.display = "block";
+
+		function get_battle_code() {
+			drumroll.display("0123456789", 5, 50, 25, battle_code, function (input) {
+				if (input != null) {
+					battle_code = input.join("");
+					insert_chara("battle_code", battle_code)
+					localStorage.setItem(game_name + "battle_code", battle_code);
+				}
+			})
+		}
+
+		function get_user_name() {
+			drumroll.display("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._", 3, 80, 30, user_name, function (input) {
+				if (input != null) {
+					user_name = input.join("");
+					insert_chara("user_name", user_name)
+					localStorage.setItem(game_name + "user_name", user_name);
+				}
+			})
+		}
+
+		function get_team_number() {
+			drumroll.display("ABCDEF", 1, 130, 30, team_number, function (input) {
+				if (input != null) {
+					team_number = input.join("");
+					insert_chara("team_number", team_number)
+			        localStorage.setItem(game_name + "team_number", team_number);
+				}
+
+			})
+		}
+
+		function insert_chara(id, characters) {
+			for (let i = 0; i < characters.length; i++) {
+				document.getElementById(id + String(i)).innerHTML = characters.substr(i, 1)
+			}
+		}
+
+		function get_date() {
+			let dt = new Date();
+			return dt.toJSON().replace(/\:/g, "").replace(/\./g, "").substr(-10, 9);
+		}
+
+		function draw_other_field(object, block_number) {
+			object.Refresh_field();
+			if (block_number != 8) {
+				object.Draw_blocks(3, 0, Game1.tetrimino.block_shape[block_number], block_number + 1)
+			}
+		}
+
+		function call_emit(code, data) {
+			if (single_mode != true) {
+				socket.emit("call", { [code]: data })
+			}
+		}
+
+		function initialize_snapshot() {
+			for (let i = 0; i < user_names.length - 1; i++) {
+				socket.on(battle_code + user_names[i + 1], function (doc) {
+					other_field[i].field_data = doc["field"];
+					other_field[i].Refresh_field();
+					let filled_lines = other_field[i].Filled_detect();
+					let lines = 0; for (let i = 0; i < filled_lines.length; i++) { lines += filled_lines[i]; }
+					if (lines > 0) {	//そろったラインが1つ以上のとき
+						other_field[i].Effect(Game1.effect_time, Game1.effect_n, filled_lines);
+						setTimeout(function () { other_field[i].Delete_lines(filled_lines) }, Game1.effect_time * (Game1.effect_n * 2));
+					}
+
+					if (doc["message"] != "") {
+						let attack_message = doc["message"];
+						let u = 0;
+						for (let j = 0; j < 10; j++) {
+							setTimeout(function () { other_message[i].Change_char(fp[i].X + 15, fp[i].Y + 30 - u, 12, attack_message); u++ }, 100 * j);
+						}
+						setTimeout(function () { other_message[i].Change_char(0, 0, 10, "") }, 1000);
+					}
+					if (doc["attack"] > 0 && friends.indexOf(user_names[i + 1]) > -1) {  //～～～　味方の攻撃のとき　～～～
+						other_bullet[i].move(fp[i].X + 20, fp[i].Y + 5, 170, -10, doc["attack"] * 10, "green", 300);
+						setTimeout(function () {
+							attack_balance += doc["attack"];
+							Game1.attack_gauge(attack_balance);
+						}.bind(Game1), 330);
+					} else if (doc["attack"] > 0 && enemies.indexOf(user_names[i + 1]) > -1) {   //～～～　敵の攻撃のとき　～～～
+						attack_F = true;
+						other_bullet[i].move(fp[i].X + 20, fp[i].Y + 5, 170, -10, doc["attack"] * 10, "red", 300);
+						setTimeout(function () {
+							attack_balance -= doc["attack"];
+							Game1.attack_gauge(attack_balance);
+						}.bind(Game1), 330);
+					}
+
+				})
+			}
+			for (let i = 0; i < user_names.length - 1; i++) {
+				socket.on(battle_code + user_names[i + 1] + "move", function (doc) {
+					other_field[i].Refresh_field();
+					let [x, y, v, c] = doc["block"]
+					other_field[i].Draw_blocks(x, y, v, c)
+				})
+			}
+
+
+			users_start = Array(user_names.length).fill(false);
+			users_end = Array(user_names.length).fill(null);
+			for (let i = 0; i < user_names.length; i++) {
+				socket.on(battle_code + user_names[i] + "action", function (doc) {
+					if (doc["action"] == "start") {
+						users_start[i] = true
+						if (users_start.every(value => value) == true) {
+							socket.emit("call", { [battle_code + user_names[i] + "action"]: { action: "all_start" } });
+						}
+					} else if (doc["action"] == "all_start" && game_start_F==false ) {
+						game_start_F = true;
+						document.getElementById("wait_dialog").style.display = "none";
+						document.onkeydown = function () { Keyboard(event.keyCode) };
+						document.getElementById("FadeLayer").style.display = "none";
+						document.getElementById("gauge").style.display = "block";
+						Game1.speed_value = setInterval(function () { Game1.speed = Game1.speed * 0.999 }, 500);
+						Game1.Game_loop();
+
+					} else if (doc["action"] == "end" && Game1.pause_F == false) {
+						users_end[i] = doc["died"]
+						if (users_end[i]) {
+							users[user_names[i]].rank = user_names.length - users_end.filter(value => value).length
+							after_time = Game1.field_fall.bind(Game1)(user_fields[i]);
+						}
+						if (users_end.every(value => value == true || value == false)) {   //生死を問わず全員ゲーム終了
+							Game1.pause_F = true;
+			                Game1.effect_F = true;
+							setTimeout(function () { Game1.Gameover() }.bind(Game1), after_time);
+
+						} else if (enemies.every(value => users_end[user_names.indexOf(value)]) && users_end[user_names.indexOf(my_username)] == null) {
+							//自分は終わっていないが、敵が全員死亡した場合
+							socket.emit("call", { [battle_code + my_username + "action"]: { action: "end", died: false } })
+						}
+					} else if (doc["action"] == "pause_start") {
+						while (Game1.game_loop_value.length > 0) { clearTimeout(Game1.game_loop_value.pop()); }
+						clearInterval(Game1.speed_value);
+						Game1.pause_F = true;
+						Game1.Game_field.Fill_field(8);
+						document.getElementById("FadeLayer").style.display = "block";
+					} else if (doc["action"] == "pause_end") {
+						Game1.pause_F = false;
+						document.getElementById("FadeLayer").style.display = "none";
+						Game1.speed_value = setInterval(function () { Game1.speed = Game1.speed * 0.999 }, 500);
+						Game1.Game_loop();
+					} else if (doc["action"] == "move") {
+						this.position_x, this.position_y, this.block_vector[0], this.block_number[0] + 1
+					}
+				});
+			}
+		}
+
+		function get_team_names() {
+			document.getElementById("start").style.display = "none"
+			document.getElementById("name_team").style.display = "block"
+
+		}
+
+		function get_enemy_names() {
+			document.getElementById("name_team").style.display = "none"
+			document.getElementById("user_wait_dialog").style.display = "block"
+			my_username = user_name + get_date()
+			users = { [my_username]: { users: 1, team: team_number, rank: 0 } };
+			socket.emit("call", { [battle_code + "join"]: users });
+			joining_F = true;
+			console.log("my name", my_username)
+
+			socket.on(battle_code + "join", function (doc) {
+				access_count += 1;
+				if (joining_F) {
+					let write_F = false;
+					for (i in doc) {
+						if (doc[i].users == 0) {
+							delete users[i];
+							write_F = true;
+						} else if (users[i] != undefined) {
+							users[i] = doc[i];
+						} else if (Object.keys(users).length < user_num) {
+							write_F = true;
+							users[i] = doc[i];
+						}
+					}
+
+					users[my_username].users = Object.keys(users).length;
+
+					if (write_F) {
+						socket.emit("call", { [battle_code + "join"]: { [my_username]: users[my_username] } });
+					}
+
+					let user_list = "";
+					let n = 0;
+					for (i in users) {
+						n += 1;
+						user_list += String(n) + ": " + i.substr(0, 3) + "&nbsp;&nbsp;&nbsp;team:&nbsp;" + users[i].team + ",&nbsp;" + users[i].users + (users[i].users > 1 ? "&nbsp;players<br>" : "&nbsp;player<br>")
+					}
+					document.getElementById("enemy_names").innerHTML = user_list;
+				}
+
+			});
+		}
+
+
+		function Game_decline() {
+			socket.emit("call", { [battle_code + "join"]: { [my_username]: { users: 0 } } });
+			location.reload();
+
+		}
+		function Game_start() {
+			if (Object.keys(users).some(value => users[my_username].users != users[value].users)) {
+				return
+			} else {
+				joining_F = false;
+			}
+
+			if (Object.keys(users).length == 1) {
+				single_mode = true;
+			} else if (Object.keys(users).length > 4) {
+				fp = [
+					{ X: 325, Y: 335, FX: 10, FY: 20, size: 5.5 },
+					{ X: 15, Y: 335, FX: 10, FY: 20, size: 5.5 },
+					{ X: 15, Y: 223, FX: 10, FY: 20, size: 5.5 },
+					{ X: 325, Y: 223, FX: 10, FY: 20, size: 5.5 },
+					{ X: 15, Y: 111, FX: 10, FY: 20, size: 5.65 }
+
+				]
+			}
+
+			if (Object.keys(users).every(value => users[value].team == users[my_username].team)) {
+				let u = 0;
+				for (i in users) {
+					users[i].team = u;
+					u += 1;
+				}
+			}
+			enemies = Object.keys(users).filter(item => users[item].team != users[my_username].team)
+			friends = Object.keys(users).filter(item => users[item].team == users[my_username].team && item != my_username)
+			friends2 = Object.keys(users).filter(item => users[item].team == users[my_username].team)
+
+
+			user_names = Object.keys(users);
+			user_fields = Array(user_names.length);
+			user_fields[0] = "Game"
+			for (let i = 0; i < enemies.length; i++) {
+				user_fields[user_names.indexOf(enemies[i])] = "enemy" + i
+			}
+			for (let i = 0; i < friends.length; i++) {
+				user_fields[user_names.indexOf(friends[i])] = "friend" + i
+			}
+
+			Game1 = new Game();
+			other_field = [];
+			other_message = [];
+			other_bullet = [];
+			my_bullet = [];
+			for (let i = 0; i < user_fields.length - 1; i++) {
+				other_field[i] = new Field(user_fields[i + 1], fp[i].X, fp[i].Y, fp[i].FX, fp[i].FY, fp[i].size);
+				Put_char(user_names[i + 1], fp[i].X + 1, fp[i].Y, 12 + 1, user_names[i + 1].substr(0, 3))
+				other_message[i] = new Put_char(user_names[i + 1] + "attack", 300, 250, 10, "");
+				other_bullet[i] = new bullet(user_names[i + 1] + "bullet")
+				my_bullet[i] = new bullet(my_username + "bullet" + i)
+			}
+
+			for (let i = 0; i < enemies.length; i++) {
+				document.getElementById("enemy" + i).style.borderColor = "red";
+			}
+			for (let i = 0; i < friends.length; i++) {
+				document.getElementById("friend" + i).style.borderColor = "green";
+			}
+
+			call_emit (battle_code + my_username,{
+					field: Game1.Game_field.field_data, attack: 0,
+					message: "", block_number: Game1.block_number[0], next: Game1.block_number[1]
+				})
+
+			initialize_snapshot();
+			document.getElementById("user_wait_dialog").style.display = "none";
+			if (single_mode) {
+				document.onkeydown = function () { Keyboard(event.keyCode) };
+				document.getElementById("FadeLayer").style.display = "none";
+				document.getElementById("gauge").style.display = "block";
+				Game1.speed_value = setInterval(function () { Game1.speed = Game1.speed * 0.999 }, 500);
+				Game1.Game_loop();
+			} else {
+				document.getElementById("wait_dialog").style.display = "block";
+				call_emit (battle_code + my_username + "action",{ action: "start" })
+			}
+		}
+
+
+
+		//～～～～～～～～～～　ポーズ　～～～～～～～～～
+		function Pause() {
+			document.getElementById("pause").style.display = "block";
+			if (single_mode) {
+				while (Game1.game_loop_value.length > 0) { clearTimeout(Game1.game_loop_value.pop()); }
+				clearInterval(Game1.speed_value);
+				Game1.pause_F = true;
+				Game1.Game_field.Fill_field(8);
+				document.getElementById("FadeLayer").style.display = "block";
+			} else {
+				socket.emit("call", { [battle_code + my_username + "action"]: { action: "pause_start" } })
+			}
+		}
+
+		function Pause_end() {
+			document.getElementById("pause").style.display = "none";
+			if (single_mode) {
+				Game1.pause_F = false;
+				document.getElementById("FadeLayer").style.display = "none";
+				Game1.speed_value = setInterval(function () { Game1.speed = Game1.speed * 0.999 }, 500);
+				Game1.Game_loop();
+			} else {
+				socket.emit("call", { [battle_code + my_username + "action"]: { action: "pause_end" } });
+			}
+		}
+
+		//～～～～～～～～～～　コントローラー、タッチ操作on/　off　～～～～～～～～～～
+
+		function ControllerSwitch() {
+			v = document.getElementById('Controller').style;
+			if (v.display == 'none') { v.display = 'block' } else { v.display = 'none' };
+		}
+
+		function TouchSwitch() {
+
+			v = document.getElementById('Hitarea').style;
+			if (v.display == "none") {
+				v.display = "block";
+				document.getElementById("Whole").style.background = "linear-gradient(blue,#000040)";
+				document.getElementById("PauseLayer").style.background = "mediumblue";
+				document.getElementById('Operation').style.visibility = "visible";
+			} else {
+				v.display = "none";
+				document.getElementById("Whole").style.background = "linear-gradient(green,#002000)";
+				document.getElementById("PauseLayer").style.background = "darkgreen";
+				document.getElementById('Operation').style.visibility = "hidden";
+			};
+		}
+
+
+		//～～～～～～～～～～　キーボード入力による動作　～～～～～～～～～
+
+		function Keyboard(key_number) {
+			if (Game1.effect_F == false && Game1.pause_F == false) {
+				if (key_number == 67) {	// "C"(ホールド)
+					Game1.Hold_action();
+				} else
+
+					if (key_number == 39) {	//右
+						Game1.Move_action(1, 0, 0);
+					} else
+
+						if (key_number == 37) {	//左
+							Game1.Move_action(-1, 0, 0);
+						} else
+
+							if (key_number == 90) {	//"Z"(左回転)
+								Game1.Move_action(0, 0, 1);
+							} else
+
+								if (key_number == 88) {	//"X"(右回転)
+									Game1.Move_action(0, 0, 3);
+								} else
+
+									if (key_number == 40) {	//下 (ソフトドロップ)
+										Game1.Move_action(0, 1, 0);
+									} else
+
+										if (key_number == 38) {	//上(ハードドロップ)
+											Game1.Hard_drop_action();
+										} else { return }
+			}
+		}
+
+		// ～～～～～～～～～～　マウス操作とボタン操作　～～～～～～～～～
+
+
+		B_sense = 100;
+
+		//スクロール禁止用関数
+		document.getElementById("Whole").addEventListener('touchstart', function (event) {
+			event.preventDefault();
+		}, { passive: false });
+
+		active_button_set("Left_key", function () { Keyboard(37) })
+		active_button_set("Right_key", function () { Keyboard(39) })
+		active_button_set("Right-R_key", function () { Keyboard(88) })
+		active_button_set("Left-R_key", function () { Keyboard(90) })
+		active_button_set("Softdrop_key", function () { Keyboard(40) })
+
+		button_set("decline", function () { Game_decline(); });
+		button_set("user_wait", function () { get_team_names() });
+		button_set("enemy_cancel", function () { location.reload() });
+		button_set("enemy_wait", function () { get_enemy_names() });
+		button_set("battle_code_input", function () { get_battle_code() });
+		button_set("battle_code_input_num", function () { get_battle_code() });
+		button_set("user_name_input", function () { get_user_name() });
+		button_set("user_name_input_num", function () { get_user_name() });
+		button_set("team_number_input", function () { get_team_number() });
+		button_set("team_number_input_num", function () { get_team_number() });
+		button_set("Harddrop_key", function () { Keyboard(38) });
+		button_set("Hold_key", function () { Keyboard(67) });
+		button_set("Game_start", function () { Game_start() });
+		button_set("PauseLayer", function () { Pause() });
+		button_set("TouchSwitch", function () { TouchSwitch() });
+		button_set("ControllerSwitch", function () { ControllerSwitch() });
+		button_set("Pause_end", function () { Pause_end() });
+		button_set("END", function () { location.reload() });
+		button_set("roll_confirm", function () { drumroll.confirm() });
+		button_set("roll_cancel", function () { drumroll.cancel() });
+
+
+
+		function active_button_set(button_name, callback) {
+			if (!navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+				let intervalID1;
+				let move = document.getElementById(button_name);
+				let RM = function () { callback(); intervalID1 = setTimeout(RM, B_sense); }
+				move.onmousedown = function () { RM(); };
+				move.onmouseup = function () { clearTimeout(intervalID1); };
+			}
+			let intervalID2 = 0;
+			let touch_target = document.getElementById(button_name);
+			let touch_action1 = function () { callback(); intervalID2 = setTimeout(T2, B_sense * 2) }
+			let T2 = function () { callback(); intervalID2 = setTimeout(T2, B_sense) }
+			touch_target.addEventListener("touchstart", function (event) {
+				if (intervalID2 == 0) {
+					event.target.classList.add('pressed')
+					touch_action1();
+				}
+			}, false);
+			touch_target.addEventListener("touchend", function (event) {
+				clearInterval(intervalID2);
+				intervalID2 = 0;
+				event.target.classList.remove('pressed')
+			}, false);
+
+		}
+
+
+		function button_set(button_name, callback) {
+			if (!navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+				document.getElementById(button_name).onmouseup = callback;
+			}
+			document.getElementById(button_name).addEventListener("touchstart", function (event) {
+				event.target.classList.add('pressed')
+			}, false);
+			document.getElementById(button_name).addEventListener("touchend", function (event) {
+				event.target.classList.remove('pressed')
+				callback();
+			}, false);
+
+		}
+
+
+		//--------タッチ操作
+
+		var el_hitarea = document.getElementById('Hitarea');
+
+		Move_sense = 22;
+		Touch_sense = 130;
+		Harddrop_sense = 150;
+		Harddrop_move = 14;
+		Drop_lag = 200;
+
+		el_hitarea.addEventListener('touchstart', function (event) {
+			TX = event.changedTouches[0].pageX;
+			TY = event.changedTouches[0].pageY;
+			ST = performance.now();
+			Game1.hard_drop_F = true; DFT = ST;
+			TMSY = TY;
+			Game1.collision_F = true;
+
+		}, false);
+
+
+		el_hitarea.addEventListener('touchmove', function (event) {
+			event.preventDefault(); // タッチによる画面スクロールを止める
+			TMX = event.changedTouches[0].pageX;
+			TMY = event.changedTouches[0].pageY;
+			if (Game1.collision_F) {
+				if (TMY - TY > Move_sense * 0.6) {
+					Keyboard(40);
+					TMSY = TY;
+					TX = TMX; TY = TMY;
+					ST = performance.now() - Touch_sense;
+
+				} else if (TX - TMX > Move_sense) {
+					Keyboard(37);
+					TX = TMX; TY = TMY;
+					ST = performance.now() - Touch_sense;
+					Game1.hard_drop_F = false; DFT = ST;
+				} else if (TMX - TX > Move_sense) {
+					Keyboard(39);
+					TX = TMX; TY = TMY;
+					ST = performance.now() - Touch_sense;
+					Game1.hard_drop_F = false; DFT = ST;
+				}
+
+			}
+		}, false);
+
+		el_hitarea.addEventListener('touchend', function (event) {
+			ET = performance.now();
+			TMY = event.changedTouches[0].pageY;
+			if (ET - DFT > Drop_lag) { Game1.hard_drop_F = true; }
+
+			if (Game1.collision_F) {
+				if (TMY - TMSY > Harddrop_move && ET - ST < Harddrop_sense && Game1.hard_drop_F) {
+					Keyboard(38);
+					TX = TMX; TY = TMY;
+					TMSY = TMY; TMSX = TMX;
+					ST = performance.now() - Touch_sense;
+
+				} else if (TY - TMY > Move_sense) {
+					Keyboard(67);
+					TX = TMX; TY = TMY;
+					ST = performance.now() - Touch_sense;
+				} else
+					if (ET - ST < Touch_sense) {
+						Keyboard(88);
+					}
+			}
+		}, false);
+
+
+	</script>
+
+</body>
+
+</html>
