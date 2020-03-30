@@ -1772,7 +1772,7 @@
 		function get_enemy_names() {
 			document.getElementById("name_team").style.display = "none"
 			document.getElementById("user_wait_dialog").style.display = "block"
-			my_username = user_name + get_date()
+			my_username = user_name + get_date();
 			users = { [my_username]: { users: 1, team: team_number, rank: 0 } };
 			socket.emit("call", { [battle_code + "join"]: users });
 			joining_F = true;

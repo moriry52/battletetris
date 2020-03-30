@@ -3,7 +3,7 @@ var io = require('socket.io')(app);
 var fs = require('fs');
 
 // HTTP サーバのポートを指定する
-port = process.env.PORT || 58080;
+port = process.env.PORT || 8080;
 app.listen(port);
 console.log ("port",port)
 
@@ -35,16 +35,6 @@ io.on('connection', function (socket) {
 			io.emit(i, data[i]);
 		}
 	});
-
-	socket.on('disconnect', function () {
-		if (mode != undefined) {
-			if (mode.slice(-4) == "join") {
-				io.emit(battle_code + "join", { [name]: { users: 0 } })
-			} else {
-				io.emit(mode.substr(0, 17) + "action", { action: "end", died: true })
-			}
-		}
-	})
 
 });
 
