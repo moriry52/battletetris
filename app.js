@@ -38,13 +38,19 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('disconnect', function (reason) {
-		if (mode != undefined && reason === 'io client disconnect') {
+		if (mode == undefined) {
+			user = ""
+		} else {
+			user = mode.substr(0, 17)
+		}
+		io.emit("disconnection", user+" "+reason)
+		/*if (mode != undefined) {
 			if (mode.slice(-4) == "join") {
 				io.emit(battle_code + "join", { [name]: { users: 0 } })
 			} else {
 				io.emit(mode.substr(0, 17) + "action", { action: "end", died: true })
 			}
-		}
+		}*/
 	})
 
 });

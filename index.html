@@ -1583,6 +1583,12 @@
 		var joining_F = false;
 		var attack_F = false;
 
+		con= new Put_char ("disconnect",0,450,15,"");
+		socket.on("disconnection", function (doc) {
+			console.log ("disconnect",doc)
+			con.Change_char (0,450,15,"disconnect "+doc)
+		});
+
 		var fp = [
 			{ X: 310, Y: 280, FX: 10, FY: 20, size: 8 },
 			{ X: 3, Y: 280, FX: 10, FY: 20, size: 8 },
