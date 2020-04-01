@@ -37,8 +37,8 @@ io.on('connection', function (socket) {
 		}
 	});
 
-	socket.on('disconnect', function () {
-		if (mode != undefined) {
+	socket.on('disconnect', function (reason) {
+		if (mode != undefined && reason === 'io client disconnect') {
 			if (mode.slice(-4) == "join") {
 				io.emit(battle_code + "join", { [name]: { users: 0 } })
 			} else {
